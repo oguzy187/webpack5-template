@@ -1,5 +1,6 @@
 const currentTask = process.env.npm_lifecycle_event
 const path = require('path')
+const webpack = require('webpack');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -21,7 +22,7 @@ let cssConfig = [
           test: /\.p?css$/i,
           use: [
                'css-loader',
-               { loader: 'postcss-loader', options: { plugins: postCSSPlugins } }
+               { loader: 'postcss-loader', options: { postcssOptions: { plugins: postCSSPlugins } } }
           ]
      },
      {
@@ -29,7 +30,7 @@ let cssConfig = [
           use: [
                'css-loader',
                { loader: 'resolve-url-loader', options: { keepQuery: true } },
-               { loader: 'postcss-loader', options: { plugins: [ require('autoprefixer') ] } },
+               { loader: 'postcss-loader', options: { postcssOptions: { plugins: [ require('autoprefixer') ] } } },
                'sass-loader'
           ]
      },
@@ -38,7 +39,7 @@ let cssConfig = [
           use: [
                'css-loader',
                { loader: 'resolve-url-loader', options: { keepQuery: true } },
-               { loader: 'postcss-loader', options: { plugins: [ require('autoprefixer') ] } },
+               { loader: 'postcss-loader', options: { postcssOptions: { plugins: [ require('autoprefixer') ] } } },
                'less-loader'
           ]
      }
@@ -55,11 +56,6 @@ let config = {
      plugins: [],
      module: {
           rules: cssConfig.concat([
-               /* {
-                    test: require.resolve('jquery'),
-                    loader: 'expose-loader',
-                    options: { exposes: ['$', 'jQuery'] }
-               }, */
                {
                     test: /\.js$/,
                     exclude: /(node_modules)/,
