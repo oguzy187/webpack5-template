@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack",
-    "devl": "webpack-dev-server",
+    "build": "webpack --watch",
+    "dev": "webpack --watch",
+    "devl": "webpack serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -29,7 +29,7 @@ let cssConfig = [
           test: /\.s(a|c)+ss$/i,
           use: [
                'css-loader',
-               { loader: 'resolve-url-loader', options: { keepQuery: true } },
+               'resolve-url-loader',
                { loader: 'postcss-loader', options: { postcssOptions: { plugins: [ require('autoprefixer') ] } } },
                'sass-loader'
           ]
@@ -38,7 +38,7 @@ let cssConfig = [
           test: /\.less$/i,
           use: [
                'css-loader',
-               { loader: 'resolve-url-loader', options: { keepQuery: true } },
+               'resolve-url-loader',
                { loader: 'postcss-loader', options: { postcssOptions: { plugins: [ require('autoprefixer') ] } } },
                'less-loader'
           ]
@@ -79,8 +79,8 @@ switch (currentTask) {
 
           config.output = {
                path: path.resolve(__dirname, 'public/assets'),
-               filename: 'js/[name].[chunkhash].js',
-               chunkFilename: 'js/[name].[chunkhash].js'
+               filename: 'js/[name].[contenthash].js',
+               chunkFilename: 'js/[name].[contenthash].js'
           };
 
           recursiveSync('./app/templates').filter(function(file) {
@@ -92,7 +92,8 @@ switch (currentTask) {
                     filename: `../templates/${page}`,
                     template: `./app/templates/${page}`,
                     publicPath: `/assets`,
-                    minify: false
+                    minify: false,
+                    scriptLoading: 'blocking'
                }));
           });
           config.plugins.push(
@@ -100,7 +101,7 @@ switch (currentTask) {
                     cleanOnceBeforeBuildPatterns: ['**/*', '!fonts/*', '!images/*'],
                }),
                new MiniCssExtractPlugin({
-                    filename: 'css/styles.[chunkhash].css'
+                    filename: 'css/styles.[contenthash].css'
                })
           );
 
@@ -141,8 +142,8 @@ switch (currentTask) {
 
           config.output = {
                path: path.resolve(__dirname, 'public/assets'),
-               filename: 'js/[name].[chunkhash].js',
-               chunkFilename: 'js/[name].[chunkhash].js'
+               filename: 'js/[name].[contenthash].js',
+               chunkFilename: 'js/[name].[contenthash].js'
           };
 
           recursiveSync('./app/templates').filter(function(file) {
@@ -154,7 +155,8 @@ switch (currentTask) {
                     filename: `../templates/${page}`,
                     template: `./app/templates/${page}`,
                     publicPath: `/assets`,
-                    minify: false
+                    minify: false,
+                    scriptLoading: 'blocking'
                }));
           });
           config.plugins.push(
@@ -162,7 +164,7 @@ switch (currentTask) {
                     cleanOnceBeforeBuildPatterns: ['**/*', '!fonts/*', '!images/*'],
                }),
                new MiniCssExtractPlugin({
-                    filename: 'css/styles.[chunkhash].css'
+                    filename: 'css/styles.[contenthash].css'
                })
           );
 
@@ -210,7 +212,8 @@ switch (currentTask) {
                     filename: page,
                     template: `./test_env/${page}`,
                     minify: false,
-                    inject: "head"
+                    inject: "head",
+                    scriptLoading: 'blocking'
                }));
           });
 
@@ -231,8 +234,8 @@ switch (currentTask) {
                },
                contentBase: path.join(__dirname, 'test_env'),
                hot: true,
+               open: true,
                port: 8095,
-               host: '0.0.0.0'
           };
           break;
           /* -------------------------- */
