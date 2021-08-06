@@ -52,7 +52,6 @@ let cssConfig = [
 let config = {
      entry: './app/assets/scripts/App.js',
      resolve: { alias: { thirdparty: path.resolve(__dirname, 'app/assets/third-party/') } },
-     watch: true,
      plugins: [],
      module: {
           rules: cssConfig.concat([
@@ -79,8 +78,8 @@ switch (currentTask) {
 
           config.output = {
                path: path.resolve(__dirname, 'public/assets'),
-               filename: 'js/[name].[contenthash].js',
-               chunkFilename: 'js/[name].[contenthash].js'
+               filename: 'js/[name].[chunkhash].js',
+               chunkFilename: 'js/[name].[chunkhash].js'
           };
 
           recursiveSync('./app/templates').filter(function(file) {
@@ -92,14 +91,20 @@ switch (currentTask) {
                     filename: `../templates/${page}`,
                     template: `./app/templates/${page}`,
                     publicPath: `/assets`,
-                    minify: false,
+                    minify: {
+                         collapseWhitespace: true,
+                         keepClosingSlash: true,
+                         removeComments: false,
+                         removeRedundantAttributes: true,
+                         removeScriptTypeAttributes: true,
+                         removeStyleLinkTypeAttributes: true,
+                         useShortDoctype: true
+                    },
                     scriptLoading: 'blocking'
                }));
           });
           config.plugins.push(
-               new CleanWebpackPlugin({
-                    cleanOnceBeforeBuildPatterns: ['**/*', '!fonts/*', '!images/*'],
-               }),
+               new CleanWebpackPlugin(),
                new MiniCssExtractPlugin({
                     filename: 'css/styles.[contenthash].css'
                })
@@ -108,22 +113,15 @@ switch (currentTask) {
           config.module.rules.push(
                {
                     test: /\.(woff|woff2|eot|ttf|svg)$/i,
-                    loader: 'url-loader',
-                    options: {
-                         name: '[name].[ext]',
-                         outputPath: 'fonts',
-                         publicPath: '/assets/fonts',
-                         limit: 1024
-                    }
+                    type: 'asset',
+                    parser: { dataUrlCondition: { maxSize: 1024 } },
+                    generator: { filename: 'fonts/[name][ext]' }
                },
                {
                     test: /\.(png|jpe?g|gif)$/i,
-                    loader: 'url-loader',
-                    options: {
-                         outputPath: 'images',
-                         publicPath: '/assets/images',
-                         limit: 1024
-                    }
+                    type: 'asset',
+                    parser: { dataUrlCondition: { maxSize: 1024 } },
+                    generator: { filename: 'images/[hash][ext]' }
                }
           );
 
@@ -142,8 +140,8 @@ switch (currentTask) {
 
           config.output = {
                path: path.resolve(__dirname, 'public/assets'),
-               filename: 'js/[name].[contenthash].js',
-               chunkFilename: 'js/[name].[contenthash].js'
+               filename: 'js/[name].[chunkhash].js',
+               chunkFilename: 'js/[name].[chunkhash].js'
           };
 
           recursiveSync('./app/templates').filter(function(file) {
@@ -155,14 +153,20 @@ switch (currentTask) {
                     filename: `../templates/${page}`,
                     template: `./app/templates/${page}`,
                     publicPath: `/assets`,
-                    minify: false,
+                    minify: {
+                         collapseWhitespace: true,
+                         keepClosingSlash: true,
+                         removeComments: false,
+                         removeRedundantAttributes: true,
+                         removeScriptTypeAttributes: true,
+                         removeStyleLinkTypeAttributes: true,
+                         useShortDoctype: true
+                    },
                     scriptLoading: 'blocking'
                }));
           });
           config.plugins.push(
-               new CleanWebpackPlugin({
-                    cleanOnceBeforeBuildPatterns: ['**/*', '!fonts/*', '!images/*'],
-               }),
+               new CleanWebpackPlugin(),
                new MiniCssExtractPlugin({
                     filename: 'css/styles.[contenthash].css'
                })
@@ -171,22 +175,15 @@ switch (currentTask) {
           config.module.rules.push(
                {
                     test: /\.(woff|woff2|eot|ttf|svg)$/i,
-                    loader: 'url-loader',
-                    options: {
-                         name: '[name].[ext]',
-                         outputPath: 'fonts',
-                         publicPath: '/assets/fonts',
-                         limit: 1024
-                    }
+                    type: 'asset',
+                    parser: { dataUrlCondition: { maxSize: 1024 } },
+                    generator: { filename: 'fonts/[name][ext]' }
                },
                {
                     test: /\.(png|jpe?g|gif)$/i,
-                    loader: 'url-loader',
-                    options: {
-                         outputPath: 'images',
-                         publicPath: '/assets/images',
-                         limit: 1024
-                    }
+                    type: 'asset',
+                    parser: { dataUrlCondition: { maxSize: 1024 } },
+                    generator: { filename: 'images/[hash][ext]' }
                }
           );
           config.optimization = { splitChunks: { chunks: 'all' } };
@@ -220,11 +217,11 @@ switch (currentTask) {
           config.module.rules.push(
                {
                     test: /\.(woff|woff2|eot|ttf|svg)$/i,
-                    loader: 'url-loader'
+                    type: 'asset/inline',
                },
                {
                     test: /\.(png|jpe?g|gif)$/i,
-                    loader: 'url-loader'
+                    type: 'asset/inline',
                }
           );
 
